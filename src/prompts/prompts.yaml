@@ -1,0 +1,208 @@
+# Tool descriptions
+tools:
+  search: >
+    Search codebases using the Zoekt search engine.
+    
+    **Workflow with other tools:**
+    1. Call `search_prompt_guide` first when unfamiliar with query syntax
+    2. Start by searching for repositories (`type:repo`) to identify relevant codebases
+    3. Use `fetch_content` to explore repository structure and understand the codebase
+    4. Refine searches with specific file paths, language filters, and patterns
+    5. Balance between search and fetch_content - search is for discovery, fetch_content is for detailed exploration
+
+    **Quick Reference:**
+    - Default search: `error handler` (searches everywhere)
+    - Search repository names: `r:repo_name type:repo`
+    - Repository name filter: `r:my-project` or `repo:github.com/org/project`
+    - File path filter: `f:\.go$` or `file:src/.*\.py`
+    - Language filter: `lang:python` or `lang:go`
+    - Negation: `-f:test` (exclude test files)
+
+    **Examples:**
+    1. Find Go function definitions: `"func SendMessage" lang:go`
+    2. Find Python class definitions: `"class UserService" lang:python`
+    3. Find Go struct definitions: `"type UserService struct" lang:go`
+    4. Find API endpoints: `router.Get lang:go` or `"@app.route" lang:python`
+    5. Find configuration files: `f:config` or `f:\.env$`
+    6. Exclude test files: `SendMessage -f:test`
+    7. Find repositories: `r:github.com/kubernetes type:repo`
+
+    # Tips
+    - Don't search for more than three different keywords at once (e.g., `foo bar baz bat`)
+    - Group phrases with quotes "" and combine keywords with AND/OR operators
+    
+  search_prompt_guide: >
+    Generates a Zoekt-specific query guide to help construct effective searches.
+    You MUST CALL THIS TOOL EXACTLY ONCE IN THE BEGINNING BEFORE ANY search or fetch_content
+    
+  fetch_content: >
+    Fetches file content or directory structure from repositories.
+    
+    **Workflow integration:**
+    1. After finding repositories with `search`, use this to explore their structure
+    2. Start with root directory (empty path) to understand project layout
+    3. Check README.md and documentation files for context
+    4. Navigate to specific directories based on initial exploration
+    5. Fetch specific files found through search results
+    
+    **Important**: Use this tool strategically in conjunction with search - avoid excessive calls that may impact performance.
+    
+    **Best practices:**
+    - Always start with repository root to understand structure
+    - Look for common patterns: `cmd/`, `src/`, `pkg/`, `internal/`, `api/`
+    - Check configuration files: `package.json`, `go.mod`, `requirements.txt`
+    - Read documentation: `README.md`, `CONTRIBUTING.md`, `docs/`
+
+    Parameters:
+    - repo: Repository path (e.g., "github.com/org/project")
+    - path: File or directory path within the repository (optional)
+
+    Returns:
+    - If path is a file: Returns the file content
+    - If path is a directory or empty: Returns directory tree listing (depth 2)
+
+    Examples:
+    # Get repository root structure (always start here)
+    repo: "github.com/kubernetes/kubernetes"
+    path: ""
+
+    # Check project documentation
+    repo: "github.com/kubernetes/kubernetes"
+    path: "README.md"
+
+    # Explore source directory
+    repo: "github.com/golang/go"
+    path: "src"
+
+    # Get specific file content
+    repo: "github.com/golang/go"
+    path: "src/runtime/proc.go"
+
+    # Check package configuration
+    repo: "github.com/facebook/react"
+    path: "package.json"
+
+# Guides
+guides:
+  codesearch_guide: >
+    # Zoekt Query Language Guide
+
+    This guide explains the Zoekt query language for searching code.
+
+    ## Syntax Overview
+
+    A query is made up of expressions:
+    - Negation (e.g., `-`)
+    - Field (e.g., `repo:`)
+    - Grouping (e.g., parentheses `()`)
+
+    Logical `OR` operations combine expressions. **`AND` is implicit** (space-separated).
+
+    ## Query Components
+
+    ### Fields
+
+    | Field | Aliases | Values | Description | Examples |
+    |-------|---------|--------|-------------|----------|
+    | `content:` | | Text (string or regex) | Searches file content | `content:"search term"` |
+    | `file:` | `f:` | Text (string or regex) | Searches file names | `file:"main.go"` |
+    | `lang:` | `l:` | Text | Filters by programming language | `lang:python` |
+    | `repo:` | `r:` | Text (string or regex) | Filters repositories by name | `repo:"github.com/user/project"` |
+    | `type:` | `t:` | `filematch`, `filename`, `file`, or `repo` | Limits result types | `type:repo` |
+
+    ### Negation
+    Negate expressions using `-`:
+    - `-repo:"github.com/example/repo"` - Exclude repository
+    - `-lang:javascript` - Exclude language
+    - `-f:test` - Exclude test files
+
+    ### Grouping
+    Use parentheses `()` for complex logic:
+    - `(repo:repo1 or repo:repo2)`
+    - `content:test (lang:python or lang:javascript)`
+
+    ### Logical Operators
+    - `or` combines expressions: `lang:go or lang:java`
+    - `and` is implicit (space-separated)
+
+    ## Special Query Types
+
+    ### Result Type Control
+    - `type:filematch` - File content matches (default)
+    - `type:filename` - Only matching filenames
+    - `type:repo` - Only repository names
+
+    ## Examples
+
+    1. **Search Python files in public repos**:
+       ```
+       lang:python public:yes content:"my_function"
+       ```
+
+    2. **Exclude archived repos with regex**:
+       ```
+       archived:no regex:/error.*handler/
+       ```
+
+    3. **Find README.md in forks**:
+       ```
+       file:"README.md" fork:yes
+       ```
+
+    4. **Search in test files specifically**:
+       ```
+       f:test SendMessage lang:go
+       ```
+
+    5. **Combine multiple fields**:
+       ```
+       (repo:"github.com/example" or repo:"github.com/test") lang:go
+       ```
+
+    ## Progressive Search Strategy
+    1. **Start broad**: `ProcessOrder` - search everywhere
+    2. **Find repositories**: `ProcessOrder type:repo` - discover relevant repos
+    3. **Explore with fetch_content**: Use found repos to understand structure
+    4. **Add language**: `ProcessOrder lang:go` - narrow by language
+    5. **Find definitions**: `"func ProcessOrder" lang:go` - exact function
+    6. **Exclude tests**: `ProcessOrder -f:test lang:go` - implementation only
+    7. **Specific repos**: `ProcessOrder r:order-service lang:go` - targeted search
+
+    ## Common Patterns
+    - **Find repo names**: `r:repo_name type:repo`
+    - **Go functions**: `"func FunctionName" lang:go`
+    - **Python functions**: `"def function_name" lang:python`
+    - **Go types**: `"type TypeName struct" lang:go`
+    - **Python classes**: `"class ClassName" lang:python`
+    - **Imports**: `"import packagename" lang:go`
+    - **Test files**: `f:_test\.go` or `f:test_.*\.py`
+    - **Config files**: `f:config` or `f:\.env` or `f:.*\.yaml`
+
+    ## Search → Explore → Refine Cycle
+    1. **Search**: Find repositories first, then search for code patterns
+    2. **Explore**: Use `fetch_content` systematically:
+       - Empty path for repository structure overview
+       - README.md and docs/ for understanding the project
+       - Key directories based on language conventions (src/, pkg/, lib/, cmd/)
+    3. **Refine**: Create targeted queries based on discoveries:
+       - Use file patterns matching the project structure
+       - Search for exact phrases found in the codebase
+       - Filter by specific paths or languages
+
+    # Tips
+    - Always use fetch_content to understand repository structure before deep searches
+    - Avoid overly complex regex searches
+    - Avoid broad searches or searching for multiple unrelated keywords in one query - this will only generate noise.
+
+    ## Recommended Workflow
+    1. First identify the repositories containing your target code
+    2. Start with moderately broad searches and progressively refine them
+    3. Use `fetch_content` with empty path to explore repository structure
+    4. Check README.md and documentation files for context
+    5. Use `fetch_content` to examine specific files from search results
+
+    Remember: Start simple, explore repositories with fetch_content, then add filters incrementally.
+
+    Use this guide to create an effective Zoekt query for your objective and call the search tool accordingly.
+
+  org_guide: "" # fill this prompt with specific knowledge on your organization
