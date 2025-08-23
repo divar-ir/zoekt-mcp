@@ -36,14 +36,15 @@ dev = [
 ]
 
 [project.scripts]
-zoekt-mcp = "src.main:main"
+zoekt-mcp = "zoekt_mcp.main:main"
 
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src"]
+[tool.setuptools]
+packages = ["zoekt_mcp"]
+package-dir = {"zoekt_mcp" = "src"}
 
 [tool.ruff]
 line-length = 120

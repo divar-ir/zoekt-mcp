@@ -1,6 +1,6 @@
 from typing import List, Protocol, runtime_checkable
 
-from src.backends.models import FormattedResult
+from .models import FormattedResult
 
 
 @runtime_checkable

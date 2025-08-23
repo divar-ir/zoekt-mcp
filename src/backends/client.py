@@ -1,8 +1,8 @@
 from typing import List
 
 import requests
-from src.backends.models import FormattedResult, Match
-from src.backends.search_protocol import SearchClientProtocol
+from .models import FormattedResult, Match
+from .search_protocol import SearchClientProtocol
 
 
 class ZoektClient(SearchClientProtocol):

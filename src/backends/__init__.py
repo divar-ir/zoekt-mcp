@@ -1,5 +1,5 @@
-from src.backends.client import ZoektClient
-from src.backends.fetcher import ZoektContentFetcher
-from src.backends.models import FormattedResult, Match
+from .client import ZoektClient
+from .fetcher import ZoektContentFetcher
+from .models import FormattedResult, Match
 
 __all__ = ["ZoektClient", "ZoektContentFetcher", "FormattedResult", "Match"]

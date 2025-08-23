@@ -9,8 +9,8 @@ import requests
 from dotenv import load_dotenv
 from fastmcp import FastMCP
 
-from src.backends import ZoektClient, ZoektContentFetcher, FormattedResult
-from src.core import PromptManager
+from backends import ZoektClient, ZoektContentFetcher, FormattedResult
+from core import PromptManager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
