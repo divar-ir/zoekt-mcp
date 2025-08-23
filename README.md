@@ -1,3 +1,5 @@
+[![MSeeP.ai Security Assessment Badge](https://mseep.net/pr/divar-ir-zoekt-mcp-badge.png)](https://mseep.ai/app/divar-ir-zoekt-mcp)
+
 # Zoekt MCP Server
 
 A Model Context Protocol (MCP) server that provides code search capabilities powered by [Zoekt](https://github.com/sourcegraph/zoekt), the indexed code search engine used by Sourcegraph.
