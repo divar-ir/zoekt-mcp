@@ -2,6 +2,10 @@
 tools:
   search: >
     Search codebases using the Zoekt search engine.
+
+    **Parameters:**
+    - query (required): The search query string
+    - limit (optional): Maximum number of results to return (default: 30, min: 1, max: 100)
     
     **Workflow with other tools:**
     1. Call `search_prompt_guide` first when unfamiliar with query syntax

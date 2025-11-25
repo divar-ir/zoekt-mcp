@@ -3,8 +3,8 @@ name = "zoekt-mcp"
 version = "0.1.0"
 description = "Model Context Protocol (MCP) server for Zoekt code search"
 readme = "README.md"
-requires-python = ">=3.10"
-license = { text = "MIT" }
+requires-python = ">=3.13"
+license = "MIT"
 authors = [
     { name = "Erfan Mirshams", email = "erfan.mirshams@gmail.com" }
 ]
@@ -12,22 +12,20 @@ keywords = ["mcp", "zoekt", "code-search", "ai", "llm"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
 ]
 
 dependencies = [
-    "fastmcp==2.4.0",
+    "fastmcp==2.12.0",
     "mcp-server==0.1.4",
-    "mcp[cli]==1.11.0",
+    "mcp[cli]==1.13.1",
     "pydantic==2.11.7",
-    "pydantic-ai[logfire]==0.4.2",
-    "pyyaml==6.0.2",
+    "pydantic-ai[logfire]==1.6.0",
     "requests==2.32.4",
     "jinja2==3.1.6",
+    "pyyaml==6.0.2",
+    "python-dotenv==1.1.1",
 ]
 
 [project.optional-dependencies]
