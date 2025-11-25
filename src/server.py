@@ -2,17 +2,15 @@ import asyncio
 import logging
 import pathlib
 import signal
-import uuid
 from typing import Any, List
 
 import requests
 from dotenv import load_dotenv
 from fastmcp import FastMCP
-from fastmcp.server.dependencies import get_http_request
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
-from .backends import ZoektClient, ZoektContentFetcher, FormattedResult
+from .backends import FormattedResult, ZoektClient, ZoektContentFetcher
 from .config import ServerConfig
 from .core import PromptManager
 from .exceptions import ContentFetchError, SearchError, ServerShutdownError
@@ -38,9 +36,7 @@ class ZoektMCPServer:
         logger.info("Using Zoekt backend")
 
     def _load_prompts(self) -> None:
-        prompt_manager = PromptManager(
-            file_path=pathlib.Path(__file__).parent / "prompts" / "prompts.yaml"
-        )
+        prompt_manager = PromptManager(file_path=pathlib.Path(__file__).parent / "prompts" / "prompts.yaml")
 
         self.codesearch_guide = prompt_manager._load_prompt("guides.codesearch_guide")
         self.search_tool_description = prompt_manager._load_prompt("tools.search")
@@ -178,9 +174,7 @@ class ZoektMCPServer:
                         {"status": "not_ready", "reason": "content_fetcher_unavailable"}, status_code=503
                     )
 
-                return JSONResponse(
-                    {"status": "ready", "service": "zoekt-mcp", "backend": "zoekt"}
-                )
+                return JSONResponse({"status": "ready", "service": "zoekt-mcp", "backend": "zoekt"})
             except Exception as e:
                 logger.error(f"Readiness check failed: {e}")
                 return JSONResponse({"status": "error", "reason": str(e)}, status_code=503)
