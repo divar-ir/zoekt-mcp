@@ -25,4 +25,4 @@ EXPOSE ${MCP_SSE_PORT} ${MCP_STREAMABLE_HTTP_PORT}
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["uv", "run", "src/main.py"]
+CMD ["uv", "run", "python", "-m", "zoekt_mcp.main"]
