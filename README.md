@@ -50,7 +50,7 @@ This MCP server integrates with Zoekt, a text search engine optimized for code r
 uv sync
 
 # Run the server
-uv run python src/main.py
+uv run python -m zoekt_mcp.main
 ```
 
 ### Using pip
@@ -64,7 +64,7 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -e .
 
 # Run the server
-python src/main.py
+python -m zoekt_mcp.main
 ```
 
 ### Using Docker
