@@ -1,6 +1,9 @@
+import os
 from typing import Protocol, runtime_checkable
 
-MAX_FILE_SIZE = 100_000
+# Max bytes of file content returned by fetch_content before truncation.
+# Override with the ZOEKT_MCP_MAX_FILE_SIZE environment variable.
+MAX_FILE_SIZE = int(os.getenv("ZOEKT_MCP_MAX_FILE_SIZE", "100000"))
 
 
 @runtime_checkable

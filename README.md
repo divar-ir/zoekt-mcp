@@ -96,6 +96,9 @@ docker run -p 9000:9000 -p 9080:9080 \
 
 - `MCP_SSE_PORT`: SSE server port (default: 8000)
 - `MCP_STREAMABLE_HTTP_PORT`: HTTP server port (default: 8080)
+- `ZOEKT_MCP_MAX_FILE_SIZE`: Max bytes of file content returned by `fetch_content` before the file is truncated (default: 100000). Raise this if you routinely fetch larger source files.
+- `ZOEKT_MCP_MAX_LINE_LENGTH`: Max characters per match line returned by `search` before the line is truncated (default: 300). Raise this for long lines such as minified JS, generated code, or wide tables.
+- `ZOEKT_MCP_MAX_OUTPUT_LENGTH`: Max total characters of formatted `search` output (default: 100000). Raise this to allow larger aggregate result payloads.
 
 ## Usage with AI Tools
 

@@ -1,20 +1,30 @@
-from typing import List
+import os
+from typing import List, Optional
 
 import requests
 from .models import FormattedResult, Match
 from .search_protocol import SearchClientProtocol
+
+# Defaults can be overridden via environment variables without code changes.
+# Explicit constructor arguments always win over env vars.
+DEFAULT_MAX_LINE_LENGTH = int(os.getenv("ZOEKT_MCP_MAX_LINE_LENGTH", "300"))
+DEFAULT_MAX_OUTPUT_LENGTH = int(os.getenv("ZOEKT_MCP_MAX_OUTPUT_LENGTH", "100000"))
 
 
 class ZoektClient(SearchClientProtocol):
     def __init__(
         self,
         base_url: str,
-        max_line_length: int = 300,
-        max_output_length: int = 100000,
+        max_line_length: Optional[int] = None,
+        max_output_length: Optional[int] = None,
     ):
         self.base_url = base_url.rstrip("/")
-        self.max_line_length = max_line_length
-        self.max_output_length = max_output_length
+        self.max_line_length = (
+            max_line_length if max_line_length is not None else DEFAULT_MAX_LINE_LENGTH
+        )
+        self.max_output_length = (
+            max_output_length if max_output_length is not None else DEFAULT_MAX_OUTPUT_LENGTH
+        )
 
     def search(self, query: str, num: int) -> dict:
         params = {
