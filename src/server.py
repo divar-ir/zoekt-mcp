@@ -232,13 +232,19 @@ class ZoektMCPServer:
 def main() -> None:
     import sys
 
+    # In stdio mode, logs and banners break JSON-RPC protocol on stdout
+    is_stdio = "--stdio" in sys.argv or os.getenv("MCP_TRANSPORT") == "stdio"
+
+    if is_stdio:
+        logging.disable(logging.CRITICAL)
+        os.environ["FASTMCP_SHOW_SERVER_BANNER"] = "false"
+
     config = ServerConfig()
     server = ZoektMCPServer(config)
 
-    # Support stdio transport for MCP clients (e.g., Claude Code)
-    if "--stdio" in sys.argv or os.getenv("MCP_TRANSPORT") == "stdio":
+    if is_stdio:
         server._register_tools()
-        server.server.run(transport="stdio")
+        server.server.run(transport="stdio", show_banner=False)
     else:
         asyncio.run(server.run())
 
