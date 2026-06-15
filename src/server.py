@@ -1,5 +1,6 @@
 import asyncio
 import logging
+import os
 import pathlib
 import signal
 from typing import Any, List
@@ -24,15 +25,25 @@ load_dotenv()
 class ZoektMCPServer:
     def __init__(self, config: ServerConfig) -> None:
         self.config = config
-        self.server = FastMCP(sse_path="/zoekt/sse", message_path="/zoekt/messages/")
+        self.server = FastMCP()
         self._shutdown_requested = False
 
         self._setup_clients()
         self._load_prompts()
 
     def _setup_clients(self) -> None:
-        self.search_client = ZoektClient(base_url=self.config.zoekt_api_url)
-        self.content_fetcher = ZoektContentFetcher(zoekt_url=self.config.zoekt_api_url)
+        self.search_client = ZoektClient(
+            base_url=self.config.zoekt_api_url,
+            zoekt_login=self.config.zoekt_api_login,
+            zoekt_password=self.config.zoekt_api_password,
+            verify_ssl=self.config.verify_ssl,
+        )
+        self.content_fetcher = ZoektContentFetcher(
+            zoekt_url=self.config.zoekt_api_url,
+            zoekt_login=self.config.zoekt_api_login,
+            zoekt_password=self.config.zoekt_api_password,
+            verify_ssl=self.config.verify_ssl,
+        )
         logger.info("Using Zoekt backend")
 
     def _load_prompts(self) -> None:
@@ -189,7 +200,12 @@ class ZoektMCPServer:
                 path="/zoekt/mcp",
                 port=self.config.streamable_http_port,
             ),
-            self.server.run_http_async(transport="sse", host="0.0.0.0", port=self.config.sse_port),
+            self.server.run_http_async(
+                transport="sse",
+                host="0.0.0.0",
+                path="/zoekt/sse",
+                port=self.config.sse_port,
+            ),
         ]
         await asyncio.gather(*tasks)
 
@@ -214,9 +230,17 @@ class ZoektMCPServer:
 
 
 def main() -> None:
+    import sys
+
     config = ServerConfig()
     server = ZoektMCPServer(config)
-    asyncio.run(server.run())
+
+    # Support stdio transport for MCP clients (e.g., Claude Code)
+    if "--stdio" in sys.argv or os.getenv("MCP_TRANSPORT") == "stdio":
+        server._register_tools()
+        server.server.run(transport="stdio")
+    else:
+        asyncio.run(server.run())
 
 
 if __name__ == "__main__":

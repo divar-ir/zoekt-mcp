@@ -96,6 +96,28 @@ docker run -p 9000:9000 -p 9080:9080 \
 
 - `MCP_SSE_PORT`: SSE server port (default: 8000)
 - `MCP_STREAMABLE_HTTP_PORT`: HTTP server port (default: 8080)
+- `ZOEKT_API_LOGIN`: Username for basic authentication (if your Zoekt instance requires auth)
+- `ZOEKT_API_PASSWORD`: Password for basic authentication (if your Zoekt instance requires auth)
+- `ZOEKT_VERIFY_SSL`: Enable SSL certificate verification (default: true)
+
+#### Authentication
+
+If your Zoekt instance requires basic authentication, set the credentials:
+
+```bash
+export ZOEKT_API_LOGIN=your_username
+export ZOEKT_API_PASSWORD=your_password
+```
+
+Both `ZOEKT_API_LOGIN` and `ZOEKT_API_PASSWORD` must be set for authentication to be enabled. If either is missing, the server will connect without authentication.
+
+#### SSL Verification
+
+For instances with self-signed certificates, disable SSL verification:
+
+```bash
+export ZOEKT_VERIFY_SSL=false
+```
 
 ## Usage with AI Tools
 

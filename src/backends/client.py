@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 
 import requests
+from requests.auth import HTTPBasicAuth
 from .models import FormattedResult, Match
 from .search_protocol import SearchClientProtocol
 
@@ -11,10 +12,18 @@ class ZoektClient(SearchClientProtocol):
         base_url: str,
         max_line_length: int = 300,
         max_output_length: int = 100000,
+        zoekt_login: Optional[str] = None,
+        zoekt_password: Optional[str] = None,
+        verify_ssl: bool = True,
     ):
         self.base_url = base_url.rstrip("/")
         self.max_line_length = max_line_length
         self.max_output_length = max_output_length
+
+        self.session = requests.Session()
+        if zoekt_login and zoekt_password:
+            self.session.auth = HTTPBasicAuth(zoekt_login, zoekt_password)
+        self.session.verify = verify_ssl
 
     def search(self, query: str, num: int) -> dict:
         params = {
@@ -25,7 +34,7 @@ class ZoektClient(SearchClientProtocol):
         }
 
         url = f"{self.base_url}/search"
-        response = requests.get(url, params=params)
+        response = self.session.get(url, params=params)
 
         if response.status_code != 200:
             raise requests.exceptions.HTTPError(

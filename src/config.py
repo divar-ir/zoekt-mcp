@@ -6,6 +6,9 @@ class ServerConfig:
         self.sse_port = int(os.getenv("MCP_SSE_PORT", "8000"))
         self.streamable_http_port = int(os.getenv("MCP_STREAMABLE_HTTP_PORT", "8080"))
         self.zoekt_api_url = self._get_required_env("ZOEKT_API_URL")
+        self.zoekt_api_login = os.getenv("ZOEKT_API_LOGIN")
+        self.zoekt_api_password = os.getenv("ZOEKT_API_PASSWORD")
+        self.verify_ssl = os.getenv("ZOEKT_VERIFY_SSL", "true").lower() == "true"
 
     @staticmethod
     def _get_required_env(key: str) -> str:

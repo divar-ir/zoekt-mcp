@@ -1,0 +1,9 @@
+# -*- coding: utf-8 -*-
+
+-r requirements.in
+
+pytest
+pytest-asyncio
+pytest-cov
+pytest-xdist
+requests-mock
