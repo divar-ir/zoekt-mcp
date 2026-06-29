@@ -1,5 +1,7 @@
 # Zoekt MCP Server
 
+**English** | [Русский](README.ru.md)
+
 A Model Context Protocol (MCP) server that provides code search capabilities powered by [Zoekt](https://github.com/sourcegraph/zoekt), the indexed code search engine used by Sourcegraph.
 
 ## Table of Contents
