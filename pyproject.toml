@@ -17,20 +17,23 @@ classifiers = [
 ]
 
 dependencies = [
-    "fastmcp==2.12.0",
-    "mcp-server==0.1.4",
-    "mcp[cli]==1.13.1",
-    "pydantic==2.11.7",
-    "pydantic-ai[logfire]==1.6.0",
-    "requests==2.32.4",
-    "jinja2==3.1.6",
-    "pyyaml==6.0.2",
-    "python-dotenv==1.1.1",
+    "fastmcp>=2.12.0",
+    "mcp-server>=0.1.4",
+    "mcp[cli]>=1.13.1",
+    "pydantic>=2.11.7",
+#    "pydantic-ai[logfire]>=1.6.0",
+    "requests>=2.32.4",
+    "jinja2>=3.1.6",
+    "pyyaml>=6.0.2",
+    "python-dotenv>=1.1.1",
 ]
 
 [project.optional-dependencies]
 dev = [
     "ruff>=0.8.3",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.0.0",
+    "requests-mock>=1.12.0",
 ]
 
 [project.scripts]
@@ -54,3 +57,8 @@ ignore = ["E501"]  # Line length is handled by formatter
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: marks tests as integration tests (requires real credentials)"
+]

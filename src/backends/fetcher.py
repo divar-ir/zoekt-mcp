@@ -4,12 +4,24 @@ import re
 from typing import Dict, List, Optional, Set
 
 import requests
+from requests.auth import HTTPBasicAuth
 from .content_fetcher_protocol import MAX_FILE_SIZE, ContentFetcherProtocol
 
 
 class ZoektContentFetcher(ContentFetcherProtocol):
-    def __init__(self, zoekt_url: str):
+    def __init__(
+        self,
+        zoekt_url: str,
+        zoekt_login: Optional[str] = None,
+        zoekt_password: Optional[str] = None,
+        verify_ssl: bool = True,
+    ):
         self.zoekt_url = zoekt_url.rstrip("/")
+
+        self.session = requests.Session()
+        if zoekt_login and zoekt_password:
+            self.session.auth = HTTPBasicAuth(zoekt_login, zoekt_password)
+        self.session.verify = verify_ssl
 
     def _clean_repository_path(self, repository: str) -> str:
         repository = repository.replace("https://", "").replace("http://", "")
@@ -59,7 +71,7 @@ class ZoektContentFetcher(ContentFetcherProtocol):
         url = f"{self.zoekt_url}/print"
 
         try:
-            response = requests.get(url, params=params)
+            response = self.session.get(url, params=params)
             response.raise_for_status()
 
             html_content = response.text
@@ -114,7 +126,7 @@ class ZoektContentFetcher(ContentFetcherProtocol):
         params = {"q": query, "format": "json", "num": "1000"}
 
         try:
-            response = requests.get(f"{self.zoekt_url}/search", params=params)
+            response = self.session.get(f"{self.zoekt_url}/search", params=params)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException:

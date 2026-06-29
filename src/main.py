@@ -11,17 +11,15 @@ def print_help():
     print("Usage: python main.py <command> [options]")
     print("\nAvailable commands:")
     print("  search     - Start the search server (default)")
+    print("\nEnvironment variables:")
+    print("  MCP_TRANSPORT=stdio  - Start server with stdio transport")
 
 
 if __name__ == "__main__":
-    # Default to search command if no argument provided
-    if len(sys.argv) < 2:
-        command = "search"
-    else:
-        command = sys.argv[1]
+    command = sys.argv[1] if len(sys.argv) > 1 else "search"
 
     match command:
-        case "search":
+        case "search" | "--stdio":
             from .server import main as search_main
             search_main()
         case "help" | "--help" | "-h":
