@@ -6,7 +6,7 @@ annotated-doc==0.0.4
     # via typer
 annotated-types==0.7.0
     # via pydantic
-anyio==4.13.0
+anyio==4.14.1
     # via
     #   httpx
     #   mcp
@@ -28,7 +28,7 @@ cachetools==7.1.4
     # via py-key-value-aio
 caio==0.9.25
     # via aiofile
-certifi==2026.5.20
+certifi==2026.6.17
     # via
     #   httpcore
     #   httpx
@@ -37,7 +37,7 @@ cffi==2.0.0 ; platform_python_implementation != 'PyPy'
     # via cryptography
 charset-normalizer==3.4.7
     # via requests
-click==8.4.1
+click==8.4.2
     # via uvicorn
 colorama==0.4.6 ; sys_platform == 'win32'
     # via
@@ -49,7 +49,7 @@ cryptography==49.0.0
     #   joserfc
     #   pyjwt
     #   secretstorage
-cyclopts==4.18.0
+cyclopts==4.19.0
     # via fastmcp-slim
 dnspython==2.8.0
     # via email-validator
@@ -63,7 +63,7 @@ fastmcp==3.4.2
     # via -r requirements.in
 fastmcp-slim[client, server]==3.4.2
     # via fastmcp
-griffelib==2.0.2
+griffelib==2.1.0
     # via fastmcp-slim
 h11==0.16.0
     # via
@@ -113,7 +113,7 @@ markdown-it-py==4.2.0
     # via rich
 markupsafe==3.0.3
     # via jinja2
-mcp[cli]==1.27.2
+mcp[cli]==1.28.1
     # via
     #   -r requirements.in
     #   fastmcp-slim
@@ -128,7 +128,7 @@ more-itertools==11.1.0
     #   jaraco-functools
 openapi-pydantic==0.5.1
     # via fastmcp-slim
-opentelemetry-api==1.42.1
+opentelemetry-api==1.43.0
     # via fastmcp-slim
 packaging==26.2
     # via fastmcp-slim
@@ -149,7 +149,7 @@ pydantic[email]==2.13.4
     #   pydantic-settings
 pydantic-core==2.46.4
     # via pydantic
-pydantic-settings==2.14.1
+pydantic-settings==2.14.2
     # via
     #   fastmcp-slim
     #   mcp
@@ -193,7 +193,7 @@ rich==15.0.0
     #   fastmcp-slim
     #   rich-rst
     #   typer
-rich-rst==2.0.1
+rich-rst==2.0.2
     # via cyclopts
 rpds-py==2026.5.1
     # via
@@ -203,14 +203,14 @@ secretstorage==3.5.0 ; sys_platform == 'linux'
     # via keyring
 shellingham==1.5.4
     # via typer
-sse-starlette==3.4.4
+sse-starlette==3.4.5
     # via mcp
 starlette==1.3.1
     # via
     #   fastmcp-slim
     #   mcp
     #   sse-starlette
-typer==0.26.7
+typer==0.26.8
     # via mcp
 typing-extensions==4.15.0
     # via
